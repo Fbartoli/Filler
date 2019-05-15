@@ -6,7 +6,7 @@
 /*   By: flbartol <flbartol@42.student.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/13 13:27:14 by flbartol          #+#    #+#             */
-/*   Updated: 2019/05/14 17:07:19 by flbartol         ###   ########.fr       */
+/*   Updated: 2019/05/15 11:29:26 by flbartol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ static int		algo_distance(t_in *info, int pos_x, int pos_y)
 
 	len = 0;
 	min = info->map_x * info->map_y;
-	y = -1;
-	while (++y < info->map_x && (x = -1))
-		while (++x < info->map_y)
+	x = -1;
+	while (++x < info->map_x && (y = -1))
+		while (++y < info->map_y)
 			if (info->distance[y][x] == ENEMY ||
 				info->map[y][x] == info->enemy ||
 				info->map[y][x] == info->enemy + 32)
@@ -40,17 +40,21 @@ void			algo(t_in *info)
 	int x;
 	int y;
 
-	x = -1;
+	x= -1;
 	while (++x < info->map_x && (y = -1))
+	{
 		while (++y < info->map_y)
-			if (info->map[x][y] == '.')
-				info->distance[x][y] = algo_distance(info, x, y);
-			else if (info->map[x][y] == info->me
-				|| info->map[x][y] == info->me + 32)
-				info->distance[x][y] = PLAYER;
-			else if (info->map[x][y] == info->enemy
-				|| info->map[x][y] == info->enemy + 32)
-				info->distance[x][y] = ENEMY;
+		{
+			if (info->map[y][x] == '.')
+				info->distance[y][x] = algo_distance(info, x, y);
+			else if (info->map[y][x] == info->me
+				|| info->map[y][x] == info->me + 32)
+				info->distance[y][x] = PLAYER;
+			else if (info->map[y][x] == info->enemy
+				|| info->map[y][x] == info->enemy + 32)
+				info->distance[y][x] = ENEMY;
+		}
+	}
 }
 
 
@@ -66,16 +70,16 @@ static int		count(t_in *info, int pos_x, int pos_y, int sum)
 	i = -1;
 	while (++i < info->piece_x && (j = -1))
 		while (++j < info->piece_y)
-			if (info->piece[i][j] == '*')
+			if (info->piece[j][i] == '*')
 			{
 				if ((i + pos_x) < 0 || (i + pos_x) >= info->map_x
 					|| (j + pos_y) < 0 || (j + pos_y) >= info->map_y)
 					return (0);
-				if (info->distance[i + pos_x][j + pos_y] == PLAYER)
+				if (info->distance[j + pos_y][i + pos_x] == PLAYER)
 					me++;
-				if (info->distance[i + pos_x][j + pos_y] == ENEMY)
+				if (info->distance[j + pos_y][i + pos_x] == ENEMY)
 					enemy++;
-				sum += info->distance[i + pos_x][j + pos_y];
+				sum += info->distance[j + pos_y][i + pos_x];
 			}
 	if (enemy || me != 1)
 		return (0);
@@ -103,5 +107,5 @@ void			place_player(t_in *info)
 				distance = sum;
 			}
 		}
-	ft_printf("%d %d\n", info->play_x, info->play_y);
+	ft_printf("%d %d\n", info->play_y, info->play_x);
 }

@@ -6,7 +6,7 @@
 /*   By: flbartol <flbartol@42.student.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/29 18:38:19 by flbartol          #+#    #+#             */
-/*   Updated: 2019/05/14 16:46:55 by flbartol         ###   ########.fr       */
+/*   Updated: 2019/05/15 11:42:43 by flbartol         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ void	read_map(t_in *info)
 	get_next_line(0, &line);
 	while (get_next_line(0, &line) > 0
 		&& !ft_strstr(line, "Piece"))
-		if (++i < info->map_x)
+		if (++i < info->map_y)
 			ft_strcpy(info->map[i], &line[4]);
 	size_of_token(info, line);
-	create_2d_token_array(info, info->piece_x);
+	create_2d_token_array(info, info->piece_y);
 	algo(info);
 	place_player(info);
 }
